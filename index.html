@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FoxLand — подключение</title>
+<base href="https://shenol111.github.io/foxland/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="image" href="https://shenol111.github.io/foxland/foxland.png">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Manrope:wght@400;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#0B0C0F;
+  --amber:#F2761B;
+  --ember:#C24E12;
+  --silver:#DCDCDE;
+  --muted:#9096A2;
+  --display:"Unbounded","Trebuchet MS",sans-serif;
+  --body:"Manrope","Segoe UI",sans-serif;
+  --mono:"JetBrains Mono","Consolas",monospace;
+
+  /* запас снизу под родной виджет загрузки Garry's Mod */
+  --gmod-gap:104px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+html{background:var(--night);height:100%}
+
+body{
+  min-height:100vh;
+  min-height:100dvh;
+  width:100vw;
+  overflow:hidden;
+  background:var(--night);
+  color:var(--silver);
+  font-family:var(--body);
+  position:relative;
+}
+
+/* ---- подложка на случай, если баннер не загрузится ---- */
+.underlay{
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(ellipse 55% 45% at 50% 38%, rgba(242,118,27,.16), transparent 62%),
+    radial-gradient(ellipse 70% 50% at 50% 96%, rgba(194,78,18,.20), transparent 60%),
+    linear-gradient(#0B0C0F,#121319);
+}
+
+/* ---- баннер ---- */
+#banner{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center 42%;
+  display:block;
+}
+#banner.failed{display:none}
+
+/* запасной логотип, включается только если картинка не пришла */
+.fallback{
+  position:fixed;
+  inset:0;
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  padding-bottom:14vh;
+}
+.fallback.on{display:flex}
+.fallback svg{width:clamp(70px,7vw,110px);height:auto}
+.fallback .word{
+  font-family:var(--display);
+  font-weight:800;
+  font-size:clamp(46px,7vw,104px);
+  letter-spacing:-.035em;
+  line-height:.92;
+}
+.fallback .word em{font-style:normal;color:var(--amber)}
+.fallback .sub{
+  font-family:var(--mono);
+  font-size:clamp(10px,.95vw,14px);
+  letter-spacing:.42em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+
+/* затемнение снизу, чтобы текст читался поверх гор */
+.scrim{
+  position:fixed;
+  inset:0;
+  background:linear-gradient(to top,
+    rgba(6,7,10,.97) 0%,
+    rgba(6,7,10,.90) 16%,
+    rgba(6,7,10,.55) 30%,
+    rgba(6,7,10,.12) 44%,
+    transparent 56%);
+  pointer-events:none;
+}
+
+/* ---- плашки с данными: верхний правый угол ---- */
+.facts{
+  position:fixed;
+  z-index:4;
+  top:clamp(20px,3vh,34px);
+  right:clamp(24px,3.5vw,54px);
+  display:flex;
+  gap:8px;
+}
+.fact{
+  border:1px solid rgba(220,220,222,.22);
+  border-radius:2px;
+  padding:9px 14px;
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:.05em;
+  background:rgba(8,9,12,.72);
+  text-align:left;
+}
+.fact b{
+  display:block;
+  color:var(--muted);
+  font-weight:400;
+  text-transform:uppercase;
+  letter-spacing:.2em;
+  font-size:9px;
+  margin-bottom:5px;
+}
+
+/* ---- нижняя панель ---- */
+.hud{
+  position:fixed;
+  z-index:4;
+  left:0;right:0;
+  bottom:var(--gmod-gap);
+  padding:0 clamp(24px,3.5vw,54px);
+  display:flex;
+  flex-direction:column;
+  gap:clamp(18px,2.6vh,30px);
+}
+
+.tips{
+  border-left:3px solid var(--amber);
+  padding-left:22px;
+  min-height:104px;
+}
+.tips-eyebrow{
+  font-family:var(--mono);
+  font-size:10.5px;
+  letter-spacing:.32em;
+  text-transform:uppercase;
+  color:var(--amber);
+  margin-bottom:13px;
+}
+.tip{
+  opacity:0;
+  transform:translateY(8px);
+  transition:opacity .5s ease,transform .5s ease;
+}
+.tip.on{opacity:1;transform:none}
+.tip h3{
+  font-family:var(--display);
+  font-weight:600;
+  font-size:clamp(19px,1.75vw,27px);
+  letter-spacing:-.015em;
+  margin-bottom:9px;
+  text-shadow:0 2px 14px rgba(0,0,0,.7);
+}
+.tip p{
+  font-size:clamp(14px,1.15vw,17px);
+  line-height:1.55;
+  color:rgba(220,220,222,.8);
+  max-width:52ch;
+  text-shadow:0 1px 10px rgba(0,0,0,.7);
+}
+
+/* ---- тропа следов = прогресс ---- */
+.meta{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:.07em;
+  color:var(--muted);
+  margin-bottom:11px;
+  gap:20px;
+}
+#file{
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  max-width:70%;
+}
+#pct{color:var(--amber);font-weight:700;font-size:14px}
+
+.paws{
+  display:flex;
+  align-items:flex-end;
+  gap:clamp(5px,1vw,14px);
+  height:clamp(24px,3vh,34px);
+}
+.paw{
+  flex:1;
+  height:100%;
+  opacity:.15;
+  transform:translateY(3px);
+  transition:opacity .45s ease,transform .45s ease;
+}
+.paw:nth-child(even){transform:translateY(9px)}
+.paw.lit{opacity:1;transform:translateY(0)}
+.paw:nth-child(even).lit{transform:translateY(6px)}
+.paw svg{width:100%;height:100%;display:block}
+
+@media (max-width:900px){
+  .facts{position:static;padding:0 24px;margin-top:18px;justify-content:flex-start;flex-wrap:wrap}
+  .tip p{max-width:none}
+}
+
+@media (max-height:620px){
+  :root{--gmod-gap:92px}
+  .tips{min-height:0}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .tip,.paw{transition:none}
+}
+</style>
+</head>
+<body>
+
+<div class="underlay"></div>
+<img id="banner" src="https://shenol111.github.io/foxland/foxland.png" alt="">
+
+<div class="fallback" id="fallback">
+  <svg viewBox="0 0 64 64" aria-hidden="true">
+    <path d="M8 8 L26 22 L38 22 L56 8 L54 32 Q54 50 32 58 Q10 50 10 32 Z"
+          fill="none" stroke="#F2761B" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M22 33 L28 33 M36 33 L42 33" stroke="#DCDCDE" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M32 40 L28 45 L32 48 L36 45 Z" fill="#C24E12"/>
+  </svg>
+  <div class="word">FOX<em>LAND</em></div>
+  <div class="sub">DarkRP · Русский сервер</div>
+</div>
+
+<div class="scrim"></div>
+
+<div class="facts">
+  <div class="fact"><b>Карта</b><span id="map">загружается</span></div>
+  <div class="fact"><b>Режим</b><span id="mode">darkrp</span></div>
+  <div class="fact"><b>Слотов</b><span id="slots">32</span></div>
+</div>
+
+<div class="hud">
+  <div class="tips">
+    <div class="tips-eyebrow">Пока грузится</div>
+    <div class="tip" id="tip">
+      <h3></h3>
+      <p></p>
+    </div>
+  </div>
+
+  <div>
+    <div class="meta">
+      <span id="file">Устанавливаем соединение…</span>
+      <span id="pct">0%</span>
+    </div>
+    <div class="paws" id="paws"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- если баннер не загрузился, показываем логотип кодом ---------- */
+  var banner = document.getElementById("banner");
+  function bannerFailed(){
+    banner.classList.add("failed");
+    document.getElementById("fallback").classList.add("on");
+  }
+  banner.addEventListener("error", bannerFailed);
+  if (banner.complete && banner.naturalWidth === 0) bannerFailed();
+
+  /* ---------- следы лисы вместо полосы прогресса ---------- */
+  var PAWS = 18;
+  var pawsBox = document.getElementById("paws");
+  var pawSVG =
+    '<svg viewBox="0 0 30 34" aria-hidden="true">' +
+      '<ellipse cx="15" cy="24" rx="8.5" ry="7.5" fill="#F2761B"/>' +
+      '<ellipse cx="5"  cy="12" rx="3.4" ry="4.4" fill="#F2761B"/>' +
+      '<ellipse cx="12" cy="7"  rx="3.4" ry="4.6" fill="#F2761B"/>' +
+      '<ellipse cx="19" cy="7"  rx="3.4" ry="4.6" fill="#F2761B"/>' +
+      '<ellipse cx="26" cy="12" rx="3.4" ry="4.4" fill="#F2761B"/>' +
+    '</svg>';
+
+  var paws = [];
+  for (var i = 0; i < PAWS; i++) {
+    var el = document.createElement("div");
+    el.className = "paw";
+    el.innerHTML = pawSVG;
+    pawsBox.appendChild(el);
+    paws.push(el);
+  }
+
+  var pctEl  = document.getElementById("pct");
+  var fileEl = document.getElementById("file");
+  var shown  = 0;
+  var target = 0;
+
+  function render(p){
+    p = Math.max(0, Math.min(1, p));
+    pctEl.textContent = Math.round(p * 100) + "%";
+    var lit = Math.round(p * PAWS);
+    for (var i = 0; i < PAWS; i++){
+      paws[i].classList.toggle("lit", i < lit);
+    }
+  }
+
+  setInterval(function(){
+    if (shown < target) {
+      shown = Math.min(target, shown + 0.012);
+      render(shown);
+    }
+  }, 40);
+
+  /* ---------- хуки Garry's Mod ---------- */
+  var total = 0, needed = 0;
+
+  window.SetFilesTotal = function(t){
+    total = t || 0;
+  };
+
+  window.SetFilesNeeded = function(n){
+    needed = n || 0;
+    if (total > 0) target = (total - needed) / total;
+    if (needed === 0 && total > 0) {
+      target = 1;
+      fileEl.textContent = "Заходим на сервер";
+    }
+  };
+
+  window.DownloadingFile = function(name){
+    if (!name) return;
+    name = String(name).replace(/^.*[\\\/]/, "");
+    fileEl.textContent = "Загрузка: " + name;
+  };
+
+  window.GameDetails = function(servername, serverurl, mapname, maxplayers, steamid, gamemode){
+    if (mapname)    document.getElementById("map").textContent   = mapname;
+    if (gamemode)   document.getElementById("mode").textContent  = gamemode;
+    if (maxplayers) document.getElementById("slots").textContent = maxplayers;
+  };
+
+  (function(){
+    var q = new URLSearchParams(location.search);
+    if (q.get("mapname"))    document.getElementById("map").textContent   = q.get("mapname");
+    if (q.get("gamemode"))   document.getElementById("mode").textContent  = q.get("gamemode");
+    if (q.get("maxplayers")) document.getElementById("slots").textContent = q.get("maxplayers");
+  })();
+
+  /* ---------- правила по кругу ---------- */
+  var TIPS = [
+    ["RDM запрещён",       "Убивать без отыгрыша нельзя. Нужна причина, которую ты сможешь объяснить админу."],
+    ["NLR — 3 минуты",     "После смерти забываешь всё, что было до неё, и не возвращаешься на место гибели три минуты."],
+    ["Рейд с поводом",     "Врываться в базу просто так нельзя. Нужен мотив: долг, конфликт, заказ."],
+    ["Держи роль",         "Взял мэра — правь. Взял бандита — грабь. Смена работы каждые две минуты ломает игру всем."],
+    ["Базы честные",       "Никаких мазе-баз и невидимых проходов. Заходить должно быть возможно."],
+    ["Не пиши в OOC",      "Обычный чат — это речь персонажа. Всё внеигровое пиши через /ooc."],
+    ["Проблема? /report",  "Не устраивай самосуд. Напиши /report — админ разберётся."],
+    ["Discord FoxLand",    "Жалобы, заявки на админку и анонсы — в нашем Discord. Ссылка в чате сервера."]
+  ];
+
+  var tipBox = document.getElementById("tip");
+  var tipH   = tipBox.querySelector("h3");
+  var tipP   = tipBox.querySelector("p");
+  var idx    = Math.floor(Math.random() * TIPS.length);
+
+  function showTip(){
+    tipBox.classList.remove("on");
+    setTimeout(function(){
+      tipH.textContent = TIPS[idx][0];
+      tipP.textContent = TIPS[idx][1];
+      tipBox.classList.add("on");
+      idx = (idx + 1) % TIPS.length;
+    }, 450);
+  }
+
+  showTip();
+  setInterval(showTip, 7000);
+})();
+</script>
+</body>
+</html>
