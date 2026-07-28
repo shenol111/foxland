@@ -1,0 +1,62 @@
+Copyright (c) 2026 FoxLand & Mert Shenol
+All rights reserved / Все права защищены.
+
+Данные материалы (изображения, текстуры, модели и иные файлы данного
+репозитория) распространяются на условиях лицензии
+Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0).
+
+ВАМ РАЗРЕШАЕТСЯ:
+- копировать и распространять материалы на любом носителе и в любом формате;
+- изменять, преобразовывать и создавать производные материалы.
+
+ПРИ ОБЯЗАТЕЛЬНОМ СОБЛЮДЕНИИ УСЛОВИЙ:
+
+1. Атрибуция (упоминание). При любом использовании материалов вы обязаны
+   указать правообладателей: "FoxLand & Mert Shenol", сослаться на
+   данную лицензию и указать, были ли внесены изменения. Упоминание должно
+   быть выполнено разумным способом, но не так, чтобы создавалось
+   впечатление, будто правообладатели одобряют вас или ваш способ
+   использования материалов.
+
+2. Некоммерческое использование. Запрещается использовать материалы в
+   коммерческих целях: продавать их, включать в платные продукты и услуги,
+   использовать для получения прямой или косвенной коммерческой выгоды —
+   без отдельного письменного разрешения правообладателей.
+
+3. Без дополнительных ограничений. Вы не можете применять юридические
+   ограничения или технические средства, юридически запрещающие другим
+   делать то, что разрешает данная лицензия.
+
+Использование материалов с нарушением этих условий автоматически прекращает
+ваши права по данной лицензии.
+
+Материалы предоставляются "КАК ЕСТЬ", без каких-либо гарантий.
+Правообладатели не несут ответственности за любой ущерб, возникший в связи
+с использованием материалов.
+
+Полный юридический текст лицензии:
+https://creativecommons.org/licenses/by-nc/4.0/legalcode.ru
+
+---
+
+This work is licensed under the Creative Commons
+Attribution-NonCommercial 4.0 International License (CC BY-NC 4.0).
+
+You are free to share and adapt the materials in this repository under the
+following terms:
+
+1. Attribution — You must give appropriate credit to
+   "FoxLand & Mert Shenol", provide a link to the license, and
+   indicate if changes were made. You may not do so in any way that suggests
+   the licensors endorse you or your use.
+
+2. NonCommercial — You may not use the materials for commercial purposes
+   without prior written permission from the copyright holders.
+
+3. No additional restrictions — You may not apply legal terms or
+   technological measures that legally restrict others from doing anything
+   the license permits.
+
+The materials are provided "AS IS", without warranty of any kind.
+
+Full legal text: https://creativecommons.org/licenses/by-nc/4.0/legalcode
